@@ -194,7 +194,7 @@ Scene::Scene(const char *xmlPath)
 	pElement = pRoot->FirstChildElement("Meshes");
 
 	XMLElement *pMesh = pElement->FirstChildElement("Mesh");
-	XMLElement *meshElement;
+	//XMLElement *meshElement;
 	while (pMesh != NULL)
 	{
 		Mesh *mesh = new Mesh();
@@ -344,14 +344,14 @@ void Scene::convertPPMToPNG(string ppmFileName, int osType)
 	if (osType == 1)
 	{
 		command = "convert " + ppmFileName + " " + ppmFileName + ".png";
-		system(command.c_str());
+		if(system(command.c_str()) == -1) return;
 	}
 
 	// call command on Windows
 	else if (osType == 2)
 	{
 		command = "magick convert " + ppmFileName + " " + ppmFileName + ".png";
-		system(command.c_str());
+		if(system(command.c_str()) == -1) return ;
 	}
 
 	// default action - don't do conversion

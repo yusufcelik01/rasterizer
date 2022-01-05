@@ -1,2 +1,7 @@
 input_outputs/**
 *.zip
+*.o
+*.ppm
+*.png
+*.swp
+rasterizer

@@ -40,7 +40,7 @@ ostream &operator<<(ostream &os, const Mesh &m)
     os << fixed << setprecision(3) << m.numberOfTransformations << " transformations and " << m.numberOfTriangles << " triangles"
        << endl << "\tTriangles are:" << endl << fixed << setprecision(0);
 
-    for (int i = 0; i < m.triangles.size(); i++) {
+    for (size_t i = 0; i < m.triangles.size(); i++) {
         os << "\t\t" << m.triangles[i].vertexIds[0] << " " << m.triangles[i].vertexIds[1] << " " << m.triangles[i].vertexIds[2] << endl;
     }
 
