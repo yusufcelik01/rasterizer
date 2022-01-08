@@ -2,6 +2,7 @@
 #define __SCALING_H__
 
 #include <iostream>
+#include "Matrix4.h"
 
 using namespace std;
 
@@ -14,6 +15,8 @@ public:
     Scaling();
     Scaling(int scalingId, double sx, double sy, double sz);
     friend ostream &operator<<(ostream &os, const Scaling &s);
+
+    Matrix4 getMatrix();
 };
 
 #endif

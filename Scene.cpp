@@ -27,6 +27,20 @@ using namespace std;
 void Scene::forwardRenderingPipeline(Camera *camera)
 {
 	// TODO: Implement this function.
+    //step1. Apply Modelling transformations (make it a single function)
+    //step2: Aplly Vievwing transformations i.e projection 
+                    //(make it another funciton)
+    //multiply two transformations for each object 
+
+    //step3: 
+    //for all triangles in meshes
+    //   if not backface
+    //      project into image plane
+    //      clip
+    //      draw
+    //   else 
+    //      skip that triangle 
+
 }
 
 /*

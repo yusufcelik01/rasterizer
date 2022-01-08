@@ -26,3 +26,13 @@ ostream &operator<<(ostream &os, const Translation &t)
 
     return os;
 }
+Matrix4 Translation::getMatrix()
+{
+    double temp[4][4] = {   {1, 0, 0, tx},
+                            {0, 1, 0, ty},
+                            {0, 0, 1, tz},
+                            {0, 0, 0, 1 }};
+
+    Matrix4 t(temp);
+    return t;
+}

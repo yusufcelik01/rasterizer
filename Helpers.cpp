@@ -202,3 +202,19 @@ Vec4 multiplyMatrixWithVec4(Matrix4 m, Vec4 v)
 
     return Vec4(values[0], values[1], values[2], values[3], v.colorId);
 }
+
+// convert [x,y,z] to [x,y,z,1]
+Vec4 makeVec4(Vec3 v)
+{
+    Vec4 u = Vec4(v.x, v.y, v.z, 1, v.colorId);
+
+    return u;
+}
+
+// convert [x,y,z,t] to [x,y,z]
+Vec3 makeVec3(Vec4 v)
+{
+    Vec3 u = Vec3(v.x, v.y, v.z, v.colorId);
+
+    return u;
+}

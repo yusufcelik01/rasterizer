@@ -22,6 +22,7 @@ Mesh::Mesh(int meshId, int type, int numberOfTransformations,
     this->transformationIds = transformationIds;
     this->transformationTypes = transformationTypes;
     this->triangles = triangles;
+
 }
 
 ostream &operator<<(ostream &os, const Mesh &m)
@@ -45,4 +46,37 @@ ostream &operator<<(ostream &os, const Mesh &m)
     }
 
     return os;
+}
+
+
+void Mesh::computeTransformations(const Scene& scene)
+{
+    Matrix4 acc = getIdentityMatrix();
+    Matrix4 temp;
+
+    vector<int>::iterator id = transformationIds.begin();
+    vector<char>::iterotor type = transformationTypes.begin();
+    for( ; id != transformationIds.end(); id++, type++){
+        switch(*type)
+        {
+            case r:
+                temp = scene.rotations[id]->getMatrix();
+                acc = multiplyMatrixWithMatrix(temp, acc);
+
+                break;
+            case t:
+                temp = scene.translations[id]->getMatrix();
+                acc = multiplyMatrixWithMatrix(temp, acc);
+
+                break;
+            case s:
+                temp = scene.scalings[id]->getMatrix();
+                acc = multiplyMatrixWithMatrix(temp, acc);
+
+                break;
+        } 
+    
+    }
+
+    return acc;
 }

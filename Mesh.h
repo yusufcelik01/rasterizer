@@ -4,6 +4,8 @@
 #include <vector>
 #include "Triangle.h"
 #include <iostream>
+#include "Matrix4.h"
+#include <unordered_map>
 
 using namespace std;
 
@@ -19,6 +21,9 @@ public:
     int numberOfTriangles;
     vector<Triangle> triangles;
 
+    Matrix4 compositeTransformation;
+    unordered_map<int, Vec3> transformedVertices;
+
     Mesh();
     Mesh(int meshId, int type, int numberOfTransformations,
           vector<int> transformationIds,
@@ -27,6 +32,8 @@ public:
           vector<Triangle> triangles);
 
     friend ostream &operator<<(ostream &os, const Mesh &m);
+
+    void computeTransformations(const Scene& scene);
 };
 
 #endif
