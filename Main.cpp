@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Matrix4.h"
 #include "Helpers.h"
+#include "MiscTools.h"
 
 using namespace std;
 
@@ -27,6 +28,18 @@ int main(int argc, char *argv[])
         {
             // initialize image with basic values
             scene->initializeImage(scene->cameras[i]);
+
+            //TODO calculate modelling transformations
+            //do them before the pipeline because multiple cameras
+            //use the same vertices with same modelling transformations
+
+            size_t numberOfMeshes = scene->meshes.size();
+            for(size_t i=0; i<numberOfMeshes; i++)
+            {
+                Mesh* mesh = scene->meshes[i];
+                //define a function that computes composite transformations
+                mesh->compositeTransformation = computeTransformations(*scene, *mesh);
+            }
 
             // do forward rendering pipeline operations
             scene->forwardRenderingPipeline(scene->cameras[i]);

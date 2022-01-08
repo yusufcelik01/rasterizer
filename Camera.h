@@ -3,6 +3,7 @@
 
 #include "Vec3.h"
 #include <string>
+#include "Matrix4.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ public:
     Vec3 pos;
     Vec3 gaze;
     Vec3 u;
-    Vec3 v;
+    Vec3 v;//up vector loaded from the file
     Vec3 w;
     double left, right, bottom, top;
     double near;
@@ -23,6 +24,8 @@ public:
     int horRes;
     int verRes;
     string outputFileName;
+
+    Matrix4 cameraTransformation;
 
     Camera();
 
@@ -38,6 +41,8 @@ public:
     Camera(const Camera &other);
 
     friend std::ostream &operator<<(std::ostream &os, const Camera &c);
+
+    void calculateCameraTransformation();
 };
 
 #endif

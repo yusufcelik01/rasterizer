@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include "Matrix4.h"
+#include "Helpers.h"
 
 using namespace std;
 
@@ -65,4 +67,24 @@ ostream &operator<<(ostream &os, const Camera &c)
        << "\tnear: " << c.near << " far: " << c.far << " resolutions: " << c.horRes << "x" << c.verRes << " fileName: " << c.outputFileName;
 
     return os;
+}
+
+
+void Camera::calculateCameraTransformation()
+{
+    double temp[4][4] = {   {1, 0, 0, -pos.x},
+                            {0, 1, 0, -pos.y},
+                            {0, 0, 1, -pos.z},
+                            {0, 0, 0,   1   }};
+    
+    Matrix4 t(temp);//translation matrix
+
+    double temp2[4][4] = {  {u.x, u.y, u.z, 0},
+                            {v.x, v.y, v.z ,0},
+                            {w.x, w.y, w.z ,0},
+                            {0, 0, 0 ,1}};
+    
+    Matrix4 r(temp2);
+
+    this->cameraTransformation = multiplyMatrixWithMatrix(r, t);
 }

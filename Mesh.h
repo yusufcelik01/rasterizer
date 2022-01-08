@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Matrix4.h"
 #include <unordered_map>
+#include "Vec3.h"
 
 using namespace std;
 
@@ -33,7 +34,6 @@ public:
 
     friend ostream &operator<<(ostream &os, const Mesh &m);
 
-    void computeTransformations(const Scene& scene);
 };
 
 #endif
