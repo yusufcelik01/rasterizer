@@ -3,6 +3,8 @@
 #include "Mesh.h"
 #include <iostream>
 #include <iomanip>
+#include "Helpers.h"
+#include "Scene.h"
 
 using namespace std;
 
@@ -53,23 +55,22 @@ void Mesh::computeTransformations(const Scene& scene)
 {
     Matrix4 acc = getIdentityMatrix();
     Matrix4 temp;
-
     vector<int>::iterator id = transformationIds.begin();
-    vector<char>::iterotor type = transformationTypes.begin();
+    vector<char>::iterator type = transformationTypes.begin();
     for( ; id != transformationIds.end(); id++, type++){
         switch(*type)
         {
-            case r:
+            case 'r':
                 temp = scene.rotations[id]->getMatrix();
                 acc = multiplyMatrixWithMatrix(temp, acc);
 
                 break;
-            case t:
+            case 't':
                 temp = scene.translations[id]->getMatrix();
                 acc = multiplyMatrixWithMatrix(temp, acc);
 
                 break;
-            case s:
+            case 's':
                 temp = scene.scalings[id]->getMatrix();
                 acc = multiplyMatrixWithMatrix(temp, acc);
 
@@ -78,5 +79,5 @@ void Mesh::computeTransformations(const Scene& scene)
     
     }
 
-    return acc;
+    // return acc;
 }

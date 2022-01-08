@@ -34,7 +34,7 @@ public:
 	vector< Rotation* > rotations;
 	vector< Translation* > translations;
 	vector< Mesh* > meshes;
-
+	
 	Scene(const char *xmlPath);
 
 	void initializeImage(Camera* camera);
