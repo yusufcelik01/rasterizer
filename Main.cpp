@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
             {
                 Mesh* mesh = scene->meshes[i];
                 //define a function that computes composite transformations
-                mesh->compositeTransformation = computeTransformations(*scene, *mesh);
+                mesh->modellingTransformation = computeModellingTransformations(*scene, *mesh);
             }
 
             // do forward rendering pipeline operations

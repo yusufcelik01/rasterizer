@@ -42,7 +42,9 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Camera &c);
 
-    void calculateCameraTransformation();
+    Matrix4 computeCameraTransformation();
+    Matrix4 computePerspectiveTransformation();
+    Matrix4 computeViewportTransformation();
 };
 
 #endif

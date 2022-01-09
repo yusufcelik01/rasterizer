@@ -22,7 +22,7 @@ public:
     int numberOfTriangles;
     vector<Triangle> triangles;
 
-    Matrix4 compositeTransformation;
+    Matrix4 modellingTransformation;
     unordered_map<int, Vec3> transformedVertices;
 
     Mesh();

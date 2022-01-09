@@ -16,6 +16,7 @@
 #include "Vec3.h"
 #include "tinyxml2.h"
 #include "Helpers.h"
+#include <unordered_map>
 
 using namespace tinyxml2;
 using namespace std;
@@ -26,9 +27,32 @@ using namespace std;
 */
 void Scene::forwardRenderingPipeline(Camera *camera)
 {
+    Matrix4 mModel, mCam, mPer, Mvp;
+    //Mesh* mesh;
 	// TODO: Implement this function.
-    //step1. Apply Modelling transformations (make it a single function)
+    //step1. get Modelling transformations 
     //computed in Main.cpp
+
+    //for this camera M_cam and M_per is constant 
+    //so before each processing vertices we can precompute them
+
+    mCam = camera->computeCameraTransformation();
+    //mPer = camera->computePerspectiveTransformation();
+    
+
+    
+    size_t numberOfMeshes = this->meshes.size();
+    vector<unordered_map<int, Vec3>> meshVertices;
+    
+    for(size_t i=0; i<numberOfMeshes; i++)//calculate new meshes
+    {
+        //mesh = this->meshes[i];//processing i'th mesh
+        meshVertices.push_back({});//allocate new map
+        
+
+    
+    
+    }
     //step2: Aplly Viewing transformations i.e projection 
                     //(make it another funciton)
     //multiply two transformations for each object 
@@ -374,4 +398,5 @@ void Scene::convertPPMToPNG(string ppmFileName, int osType)
 	{
 	}
 }
+
 

@@ -1,6 +1,6 @@
 #include "MiscTools.h"
 
-Matrix4 computeTransformations(const Scene& scene,  Mesh& mesh)
+Matrix4 computeModellingTransformations(const Scene& scene,  Mesh& mesh)
 {
     Matrix4 acc = getIdentityMatrix();
     Matrix4 temp;

@@ -8,7 +8,7 @@
 #include "Helpers.h"
 
 
-Matrix4 computeTransformations(const Scene& scene, Mesh& mesh);
+Matrix4 computeModellingTransformations(const Scene& scene, Mesh& mesh);
 
 
 #endif
