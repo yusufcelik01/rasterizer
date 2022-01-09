@@ -44,6 +44,7 @@ public:
 
     Matrix4 computeCameraTransformation();
     Matrix4 computePerspectiveTransformation();
+    Matrix4 computeMperMcam();
     Matrix4 computeViewportTransformation();
 };
 

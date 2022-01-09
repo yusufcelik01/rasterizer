@@ -6,7 +6,7 @@
 #include <iostream>
 #include "Matrix4.h"
 #include <unordered_map>
-#include "Vec3.h"
+#include "Vec4.h"
 
 using namespace std;
 
@@ -22,8 +22,7 @@ public:
     int numberOfTriangles;
     vector<Triangle> triangles;
 
-    Matrix4 modellingTransformation;
-    unordered_map<int, Vec3> transformedVertices;
+    unordered_map<int, Vec4> transformedVertices;
 
     Mesh();
     Mesh(int meshId, int type, int numberOfTransformations,

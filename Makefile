@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++17 -Wall -Werror -O3 -g
+CXXFLAGS = -std=c++17 -Wall -Werror -O3 #-g
 
 RASTERIZER_OBJECTS = Scene.o Matrix4.o Helpers.o Main.o Vec3.o Vec4.o Color.o tinyxml2.o Rotation.o Translation.o Scaling.o Camera.o Mesh.o Triangle.o MiscTools.o
 

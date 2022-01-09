@@ -5,6 +5,7 @@
 #include "Matrix4.h"
 #include "Helpers.h"
 #include "MiscTools.h"
+#include "Triangle.h"
 
 using namespace std;
 
@@ -24,6 +25,30 @@ int main(int argc, char *argv[])
 
         scene = new Scene(xmlPath);
 
+
+
+        for(Mesh* mesh: scene->meshes) 
+        {
+            Matrix4 mModel = computeModellingTransformations(*scene, *mesh);
+            mesh->transformedVertices = {};
+            for(Triangle triangle: mesh->triangles)
+            {
+                Vec4 v1,v2,v3;
+
+                v1 = makeVec4(*(scene->vertices[triangle.vertexIds[0]]));
+                v2 = makeVec4(*(scene->vertices[triangle.vertexIds[1]]));
+                v3 = makeVec4(*(scene->vertices[triangle.vertexIds[2]]));
+
+                mesh->transformedVertices[triangle.vertexIds[0]] = multiplyMatrixWithVec4(mModel, v1);
+                mesh->transformedVertices[triangle.vertexIds[1]] = multiplyMatrixWithVec4(mModel, v2);
+                mesh->transformedVertices[triangle.vertexIds[2]] = multiplyMatrixWithVec4(mModel, v3);
+
+
+            }
+        }
+
+
+
         for (size_t i = 0; i < scene->cameras.size(); i++)
         {
             // initialize image with basic values
@@ -32,14 +57,6 @@ int main(int argc, char *argv[])
             //TODO calculate modelling transformations
             //do them before the pipeline because multiple cameras
             //use the same vertices with same modelling transformations
-
-            size_t numberOfMeshes = scene->meshes.size();
-            for(size_t i=0; i<numberOfMeshes; i++)
-            {
-                Mesh* mesh = scene->meshes[i];
-                //define a function that computes composite transformations
-                mesh->modellingTransformation = computeModellingTransformations(*scene, *mesh);
-            }
 
             // do forward rendering pipeline operations
             scene->forwardRenderingPipeline(scene->cameras[i]);

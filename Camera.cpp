@@ -118,6 +118,12 @@ Matrix4 Camera::computePerspectiveTransformation()
     return mPer;
 }
 
+Matrix4 Camera::computeMperMcam()
+{
+    return multiplyMatrixWithMatrix(computePerspectiveTransformation(),
+                                        computeCameraTransformation());
+}
+
 Matrix4 Camera::computeViewportTransformation()
 {
     int x = horRes;

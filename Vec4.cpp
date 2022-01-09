@@ -30,6 +30,11 @@ Vec4::Vec4(const Vec4 &other)
     this->colorId = other.colorId;
 }
 
+Vec4 Vec4::operator=(const Vec4& other)
+{
+    return Vec4(other);
+}
+
 double Vec4::getElementAt(int index)
 {
     switch (index)

@@ -17,6 +17,7 @@
 #include "tinyxml2.h"
 #include "Helpers.h"
 #include <unordered_map>
+#include "MiscTools.h"
 
 using namespace tinyxml2;
 using namespace std;
@@ -27,7 +28,7 @@ using namespace std;
 */
 void Scene::forwardRenderingPipeline(Camera *camera)
 {
-    Matrix4 mModel, mCam, mPer, Mvp;
+    Matrix4  mCam, mPer, Mvp;
     //Mesh* mesh;
 	// TODO: Implement this function.
     //step1. get Modelling transformations 
@@ -36,13 +37,58 @@ void Scene::forwardRenderingPipeline(Camera *camera)
     //for this camera M_cam and M_per is constant 
     //so before each processing vertices we can precompute them
 
-    mCam = camera->computeCameraTransformation();
     //mPer = camera->computePerspectiveTransformation();
     
 
+    for(Mesh* mesh: meshes)
+    {
+        //********** BACK FACE CULLING******************
+        vector<int> frontFacingTriangles = {};
+        unordered_map<int, Vec4> vertices = {};
+
+        backFaceCulling(*camera, *mesh, frontFacingTriangles, false);
+        //TODO culling is always disabled change it
+
+        //*********** CAMERA TRANSFORMATIONS*********
+
+        Matrix4 MperMcam = camera->computeMperMcam();
+
+        for(int triangleId: frontFacingTriangles)
+        {
+            //
+            Vec4 v1,v2,v3; 
+            Triangle triangle = mesh->triangles[triangleId];
+            v1 = mesh->transformedVertices[triangle.vertexIds[0]];
+            v2 = mesh->transformedVertices[triangle.vertexIds[1]];
+            v3 = mesh->transformedVertices[triangle.vertexIds[2]];
+
+            v1 = multiplyMatrixWithVec4(MperMcam, v1);
+            v2 = multiplyMatrixWithVec4(MperMcam, v2);
+            v3 = multiplyMatrixWithVec4(MperMcam, v3);
+
+
+            vertices.try_emplace(triangle.vertexIds[0], v1);
+            vertices.try_emplace(triangle.vertexIds[0], v2);
+            vertices.try_emplace(triangle.vertexIds[0], v3);
+
+            
+        }
+
+
+        
+
+
+
+    
+    }
+
+
+    //*******8
+
+
     
     size_t numberOfMeshes = this->meshes.size();
-    vector<unordered_map<int, Vec3>> meshVertices;
+    vector<unordered_map<int, Vec3>> meshVertices;//move to mesh class
     
     for(size_t i=0; i<numberOfMeshes; i++)//calculate new meshes
     {

@@ -9,6 +9,7 @@
 
 
 Matrix4 computeModellingTransformations(const Scene& scene, Mesh& mesh);
+void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTriangles, bool cullingEnabled);
 
 
 #endif
