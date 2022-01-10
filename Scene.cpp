@@ -16,8 +16,10 @@
 #include "Vec3.h"
 #include "tinyxml2.h"
 #include "Helpers.h"
-#include <unordered_map>
+//#include <unordered_map>
 #include "MiscTools.h"
+#include "Line.h"
+#include <map>
 
 using namespace tinyxml2;
 using namespace std;
@@ -42,37 +44,142 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 
     for(Mesh* mesh: meshes)
     {
-        //********** BACK FACE CULLING******************
+        //************** BACK FACE CULLING************
         vector<int> frontFacingTriangles = {};
-        unordered_map<int, Vec4> vertices = {};
+        unordered_map<int, Vec4> processedVertices = {};
 
         backFaceCulling(*camera, *mesh, frontFacingTriangles, false);
         //TODO culling is always disabled change it
 
-        //*********** CAMERA TRANSFORMATIONS*********
+        //*********** CAMERA TRANSFORMATIONS *********
 
         Matrix4 MperMcam = camera->computeMperMcam();
 
+        //fill transformed vertices to unoredered_map
         for(int triangleId: frontFacingTriangles)
         {
             //
             Vec4 v1,v2,v3; 
             Triangle triangle = mesh->triangles[triangleId];
-            v1 = mesh->transformedVertices[triangle.vertexIds[0]];
-            v2 = mesh->transformedVertices[triangle.vertexIds[1]];
-            v3 = mesh->transformedVertices[triangle.vertexIds[2]];
+            v1 = mesh->transformedVertices[triangle.vertexIds[0]-1];
+            v2 = mesh->transformedVertices[triangle.vertexIds[1]-1];
+            v3 = mesh->transformedVertices[triangle.vertexIds[2]-1];
 
             v1 = multiplyMatrixWithVec4(MperMcam, v1);
             v2 = multiplyMatrixWithVec4(MperMcam, v2);
             v3 = multiplyMatrixWithVec4(MperMcam, v3);
 
 
-            vertices.try_emplace(triangle.vertexIds[0], v1);
-            vertices.try_emplace(triangle.vertexIds[0], v2);
-            vertices.try_emplace(triangle.vertexIds[0], v3);
+            processedVertices.try_emplace(triangle.vertexIds[0], v1);
+            processedVertices.try_emplace(triangle.vertexIds[1], v2);
+            processedVertices.try_emplace(triangle.vertexIds[2], v3);
 
             
         }
+
+        //**************** CLIPPING ******************
+        //
+
+        if(!mesh->type)//if mesh is a wireframe mesh
+        {
+            //TODO implement clipping
+
+            vector<Line> lines = {};
+            map< pair<int, int>, bool> isLineAdded = {};
+
+            for(int triangleId: frontFacingTriangles)
+            {
+                Triangle triangle = mesh->triangles[triangleId];
+                int vId1,vId2,vId3;
+
+                vId1 = triangle.vertexIds[0];
+                vId2 = triangle.vertexIds[1];
+                vId3 = triangle.vertexIds[2];
+
+                if(vId2 < vId1){
+                    swap(vId1, vId2);//vId1 is smaller now
+                }
+                if(vId3 < vId1){
+                    swap(vId1, vId3);//vId1 is the smallest
+                }
+                if(vId3 < vId2){
+                    swap(vId2, vId3);
+                }
+                // now ids are sorted
+
+
+                //TODO clipping should be done in these if blocks
+                if(!isLineAdded[make_pair(vId1, vId2)] )
+                {//if that line is not present add it
+                    Vec4 p1,p2;
+
+                    p1 = processedVertices[vId1];
+                    p2 = processedVertices[vId2];
+
+                    lines.push_back(Line(p1, p2));
+                    isLineAdded.try_emplace({vId1, vId2});
+                    
+                }
+                if(!isLineAdded[make_pair(vId2, vId3)] )
+                {
+                    Vec4 p2, p3;
+
+                    p2 = processedVertices[vId2];
+                    p3 = processedVertices[vId3];
+
+                    lines.push_back(Line(p2, p3));
+                    isLineAdded.try_emplace({vId2, vId3});
+                
+                }
+                if(!isLineAdded[make_pair(vId1, vId3)] )
+                {
+                    Vec4 p1, p3;
+                
+                    p1 = processedVertices[vId1];
+                    p3 = processedVertices[vId3];
+
+                    lines.push_back(Line(p1, p3));
+                    isLineAdded.try_emplace({vId1, vId3});
+                }
+
+            
+            }
+
+            //******* prespective division & viewport transformation ****
+            Matrix4 mViewport = camera->computeViewportTransformation();
+
+            for(Line& line: lines)
+            {
+                Vec4 point1, point2;
+
+                if(camera->projectionType)
+                {
+                    point1 = perspectiveDivide(line.p1);
+                    point2 = perspectiveDivide(line.p2);
+                }
+                line.p1 = multiplyMatrixWithVec4(mViewport, point1);
+                line.p2 = multiplyMatrixWithVec4(mViewport, point2);
+            }
+
+
+
+            for(Line line: lines)
+            {
+                Color color(0, 0, 0);
+                this->image[round(line.p1.x)][round(line.p1.y)] = color;
+                this->image[round(line.p2.x)][round(line.p2.y)] = color;
+            }
+        
+        
+        
+        }
+        else//if mesh is a solid mesh
+        {
+            //TODO TODO TODO
+        
+        
+        }
+
 
 
         

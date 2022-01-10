@@ -13,17 +13,17 @@ Matrix4 computeModellingTransformations(const Scene& scene,  Mesh& mesh)
         switch(*type)
         {
             case 'r':
-                temp = scene.rotations[*id]->getMatrix();
+                temp = scene.rotations[*id-1]->getMatrix();
                 acc = multiplyMatrixWithMatrix(temp, acc);
 
                 break;
             case 't':
-                temp = scene.translations[*id]->getMatrix();
+                temp = scene.translations[*id-1]->getMatrix();
                 acc = multiplyMatrixWithMatrix(temp, acc);
 
                 break;
             case 's':
-                temp = scene.scalings[*id]->getMatrix();
+                temp = scene.scalings[*id-1]->getMatrix();
                 acc = multiplyMatrixWithMatrix(temp, acc);
 
                 break;
@@ -47,9 +47,9 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
             Vec3 v1, v2;// edge vectors of a triangle
             Vec3 normal;// normal of the triangle
 
-            c1 = makeVec3(mesh.transformedVertices[triangle.vertexIds[0]]);
-            c2 = makeVec3(mesh.transformedVertices[triangle.vertexIds[1]]);
-            c3 = makeVec3(mesh.transformedVertices[triangle.vertexIds[2]]);
+            c1 = makeVec3(mesh.transformedVertices[triangle.vertexIds[0]-1]);
+            c2 = makeVec3(mesh.transformedVertices[triangle.vertexIds[1]-1]);
+            c3 = makeVec3(mesh.transformedVertices[triangle.vertexIds[2]-1]);
 
             v1 = subtractVec3(c2, c1);
             v2 = subtractVec3(c1, c3);

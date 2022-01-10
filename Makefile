@@ -1,12 +1,12 @@
-CXXFLAGS = -std=c++17 -Wall -Werror -O3 #-g
+CXXFLAGS = -std=c++17 -Wall -Werror -O0 -g
 
-RASTERIZER_OBJECTS = Scene.o Matrix4.o Helpers.o Main.o Vec3.o Vec4.o Color.o tinyxml2.o Rotation.o Translation.o Scaling.o Camera.o Mesh.o Triangle.o MiscTools.o
+RASTERIZER_OBJECTS = Scene.o Matrix4.o Helpers.o Main.o Vec3.o Vec4.o Color.o tinyxml2.o Rotation.o Translation.o Scaling.o Camera.o Mesh.o Triangle.o MiscTools.o Line.o
+
 
 rasterizer: $(RASTERIZER_OBJECTS)
 	$(CXX) $(CFLAGS) $(RASTERIZER_OBJECTS) -o rasterizer
 	
 
-Camera.o: Camera.cpp Camera.h
 
 %.o: %.cpp %.h
 

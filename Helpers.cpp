@@ -219,4 +219,11 @@ Vec3 makeVec3(Vec4 v)
     return u;
 }
 
+Vec4 perspectiveDivide(Vec4 v)
+{
+    v.x /= v.t;
+    v.y /= v.t;
+    v.z /= v.t;
 
+    return v;
+}

@@ -90,9 +90,10 @@ Matrix4 Camera::computeCameraTransformation()
     return cameraTransformation;
 }
 
-
+/*
 Matrix4 Camera::computePerspectiveTransformation()
 {
+    //TODO slides and the book have different matrices
     //if projection type is orthographic then return M_orth
     //if it is perspective return M_perspective = M_orth . M_p2o
 
@@ -126,11 +127,65 @@ Matrix4 Camera::computeMperMcam()
 
 Matrix4 Camera::computeViewportTransformation()
 {
+    //TODO slides and the book have different matrices
     int x = horRes;
     int y = verRes;
     double temp[4][4] = {   {x/2.0, 0, 0 ,(x-1)/2.0},
                             {0, y/2.0, 0, (y-1)/2.0},
                             {0, 0, 0.5, 0.5},
+                            {0, 0, 0, 1}};
+    //notice that viewport transformation is normally a matrix of size 3x4
+    //but for simplicity we will use a matrix of 4x4 (no class defined for it)
+    //then we will get rid of the last element of the resulting vector
+
+    Matrix4 mVp(temp);
+
+    return mVp;
+}
+*/
+
+Matrix4 Camera::computePerspectiveTransformation()
+{
+    //TODO slides and the book have different matrices
+    //if projection type is orthographic then return M_orth
+    //if it is perspective return M_perspective = M_orth . M_p2o
+
+    double temp[4][4] = {   {2/(right-left), 0, 0 ,-(right+left)/(right-left)},
+                            {0, 2/(top-bottom), 0, -(top+bottom)/(top-bottom)},
+                            {0, 0, -2/(far-near), (far+near)/(far-near)},
+                            {0, 0, 0, 1}};
+
+    Matrix4 mPer(temp);//mPer = M_orth
+
+    if(projectionType)//if we are dealing with perspective projection
+    {
+        double temp2[4][4] = {  {near, 0, 0, 0},       
+                                {0, near, 0, 0},
+                                {0, 0, far+near, -far*near},
+                                {0, 0, 1, 0}};
+
+        Matrix4 m_p2o(temp2);
+        mPer = multiplyMatrixWithMatrix(mPer, m_p2o);
+    }
+
+
+    return mPer;
+}
+
+Matrix4 Camera::computeMperMcam()
+{
+    return multiplyMatrixWithMatrix(computePerspectiveTransformation(),
+                                        computeCameraTransformation());
+}
+
+Matrix4 Camera::computeViewportTransformation()
+{
+    //TODO slides and the book have different matrices
+    int x = horRes;
+    int y = verRes;
+    double temp[4][4] = {   {x/2.0, 0, 0 ,(x-1)/2.0},
+                            {0, y/2.0, 0, (y-1)/2.0},
+                            {0, 0, 1, 0},
                             {0, 0, 0, 1}};
     //notice that viewport transformation is normally a matrix of size 3x4
     //but for simplicity we will use a matrix of 4x4 (no class defined for it)

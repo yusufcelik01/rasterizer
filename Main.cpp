@@ -35,13 +35,13 @@ int main(int argc, char *argv[])
             {
                 Vec4 v1,v2,v3;
 
-                v1 = makeVec4(*(scene->vertices[triangle.vertexIds[0]]));
-                v2 = makeVec4(*(scene->vertices[triangle.vertexIds[1]]));
-                v3 = makeVec4(*(scene->vertices[triangle.vertexIds[2]]));
+                v1 = makeVec4(*(scene->vertices[triangle.vertexIds[0]-1]));
+                v2 = makeVec4(*(scene->vertices[triangle.vertexIds[1]-1]));
+                v3 = makeVec4(*(scene->vertices[triangle.vertexIds[2]-1]));
 
-                mesh->transformedVertices[triangle.vertexIds[0]] = multiplyMatrixWithVec4(mModel, v1);
-                mesh->transformedVertices[triangle.vertexIds[1]] = multiplyMatrixWithVec4(mModel, v2);
-                mesh->transformedVertices[triangle.vertexIds[2]] = multiplyMatrixWithVec4(mModel, v3);
+                mesh->transformedVertices[triangle.vertexIds[0]-1] = multiplyMatrixWithVec4(mModel, v1);
+                mesh->transformedVertices[triangle.vertexIds[1]-1] = multiplyMatrixWithVec4(mModel, v2);
+                mesh->transformedVertices[triangle.vertexIds[2]-1] = multiplyMatrixWithVec4(mModel, v3);
 
 
             }
@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
             // initialize image with basic values
             scene->initializeImage(scene->cameras[i]);
 
-            //TODO calculate modelling transformations
             //do them before the pipeline because multiple cameras
             //use the same vertices with same modelling transformations
 

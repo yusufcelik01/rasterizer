@@ -32,7 +32,13 @@ Vec4::Vec4(const Vec4 &other)
 
 Vec4 Vec4::operator=(const Vec4& other)
 {
-    return Vec4(other);
+    this->x = other.x;
+    this->y = other.y;
+    this->z = other.z;
+    this->t = other.t;
+    this->colorId = other.colorId;
+
+    return *this;
 }
 
 double Vec4::getElementAt(int index)

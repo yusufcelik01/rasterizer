@@ -84,6 +84,7 @@ Vec4 makeVec4(Vec3 v);
 // convert [x,y,z,t] to [x,y,z]
 Vec3 makeVec3(Vec4 v);
 
+Vec4 perspectiveDivide(Vec4 v);
 
 
 
