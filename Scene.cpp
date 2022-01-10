@@ -75,7 +75,9 @@ void Scene::forwardRenderingPipeline(Camera *camera)
             processedVertices.try_emplace(triangle.vertexIds[2], v3);
 
             
-        }
+        }//CVV 
+        Vec4 v =processedVertices[7]; 
+        cout << v.x << " " << v.y << ' ' << v.z << " " << v.t << endl; 
 
         //**************** CLIPPING ******************
         //

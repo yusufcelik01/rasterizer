@@ -90,7 +90,6 @@ Matrix4 Camera::computeCameraTransformation()
     return cameraTransformation;
 }
 
-/*
 Matrix4 Camera::computePerspectiveTransformation()
 {
     //TODO slides and the book have different matrices
@@ -142,8 +141,9 @@ Matrix4 Camera::computeViewportTransformation()
 
     return mVp;
 }
-*/
 
+
+/*
 Matrix4 Camera::computePerspectiveTransformation()
 {
     //TODO slides and the book have different matrices
@@ -195,3 +195,4 @@ Matrix4 Camera::computeViewportTransformation()
 
     return mVp;
 }
+*/

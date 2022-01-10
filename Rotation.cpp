@@ -45,10 +45,10 @@ Matrix4 Rotation::getMatrix()
 
     Matrix4 r_alpha(temp);
 
-    double temp2[4][4] = { {d, 0, -u.x, 0},         
-                           {0, 1, 0, 0},
-                           {u.x, 0, d, 0},
-                           {0, 0, 0, 1}};
+    double temp2[4][4] = { {d  , 0, -u.x, 0},         
+                           {0  , 1,    0, 0},
+                           {u.x, 0,    d, 0},
+                           {0  , 0,    0, 1}};
     Matrix4 rBeta(temp2); 
 
     temp[0][2] *= -1;
@@ -64,9 +64,15 @@ Matrix4 Rotation::getMatrix()
 
     Matrix4 rTheta(temp3);
 
+    /*
     acc = multiplyMatrixWithMatrix(r_alpha, r_beta);
     acc = multiplyMatrixWithMatrix(acc, rTheta);
     acc = multiplyMatrixWithMatrix(acc, rBeta);
+    rTheta = multiplyMatrixWithMatrix(acc, rAlpha);
+    */
+    acc = multiplyMatrixWithMatrix(r_alpha, rBeta);
+    acc = multiplyMatrixWithMatrix(acc, rTheta);
+    acc = multiplyMatrixWithMatrix(acc, r_beta);
     rTheta = multiplyMatrixWithMatrix(acc, rAlpha);
 
     return rTheta;

@@ -224,6 +224,7 @@ Vec4 perspectiveDivide(Vec4 v)
     v.x /= v.t;
     v.y /= v.t;
     v.z /= v.t;
+    v.t /= v.t;
 
     return v;
 }
