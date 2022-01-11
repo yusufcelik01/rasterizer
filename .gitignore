@@ -6,3 +6,6 @@ input_outputs/**
 *.swp
 *.xml
 rasterizer
+
+culling*/**
+clipp*/**

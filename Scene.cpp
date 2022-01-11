@@ -31,15 +31,6 @@ using namespace std;
 void Scene::forwardRenderingPipeline(Camera *camera)
 {
     Matrix4  mCam, mPer, Mvp;
-    //Mesh* mesh;
-	// TODO: Implement this function.
-    //step1. get Modelling transformations 
-    //computed in Main.cpp
-
-    //for this camera M_cam and M_per is constant 
-    //so before each processing vertices we can precompute them
-
-    //mPer = camera->computePerspectiveTransformation();
     
 
     for(Mesh* mesh: meshes)
@@ -48,8 +39,7 @@ void Scene::forwardRenderingPipeline(Camera *camera)
         vector<int> frontFacingTriangles = {};
         unordered_map<int, Vec4> processedVertices = {};
 
-        backFaceCulling(*camera, *mesh, frontFacingTriangles, false);
-        //TODO culling is always disabled change it
+        backFaceCulling(*camera, *mesh, frontFacingTriangles, cullingEnabled);
 
         //*********** CAMERA TRANSFORMATIONS *********
 
@@ -84,8 +74,6 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 
         if(!mesh->type)//if mesh is a wireframe mesh
         {
-            //TODO implement clipping
-
             vector<Line> lines = {};
             map< pair<int, int>, bool> isLineAdded = {};
 
@@ -180,7 +168,7 @@ void Scene::forwardRenderingPipeline(Camera *camera)
         }
         else//if mesh is a solid mesh
         {
-            //TODO TODO TODO
+            
             Matrix4 mViewport = camera->computeViewportTransformation();
 
             for(pair<const int, Vec4>& vec : processedVertices)
@@ -192,18 +180,59 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                 vec.second = multiplyMatrixWithVec4(mViewport, vec.second);
             }
 
+			for (int id : frontFacingTriangles)
+			{
+				Triangle triangle = mesh->triangles[id];
+				Vec4 vec0 = processedVertices[triangle.getFirstVertexId()];
+				Vec4 vec1 = processedVertices[triangle.getSecondVertexId()];
+				Vec4 vec2 = processedVertices[triangle.getThirdVertexId()];
 
+				int x0,y0,x1,y1,x2,y2;
+				Color c0, c1, c2;
+				x0 = vec0.x;
+				y0 = vec0.y;
+				c0 = *(this->colorsOfVertices[vec0.colorId-1]);
+
+				x1 = vec1.x;
+				y1 = vec1.y;
+				c1 = *(this->colorsOfVertices[vec1.colorId-1]);
+				
+				x2 = vec2.x;
+				y2 = vec2.y;
+				c2 = *(this->colorsOfVertices[vec2.colorId-1]);
+
+				LineEquation f01(x0,x1,y0,y1);
+				LineEquation f12(x1,x2,y1,y2);
+				LineEquation f20(x2,x0,y2,y0);
+
+				int xmin = min(x0,min(x1,x2));
+				int ymin = min(y0,min(y1,y2));
+				int xmax = max(x0,max(x1,x2));
+				int ymax = max(y0,max(y1,y2));
+				double denom12 = 1.0/f12.getLine(x0,y0);
+				double denom20 = 1.0/f20.getLine(x1,y1);
+				double denom01 = 1.0/f01.getLine(x2,y2);
+				for (int y = ymin; y <= ymax; y++){
+					for (int x = xmin; x <= xmax; x++)
+					{
+						double alpha = f12.getLine(x,y)*denom12;
+						double beta = f20.getLine(x,y)*denom20;
+						double gamma = f01.getLine(x,y)*denom01;
+						if(alpha >= 0 && beta >= 0 && gamma >= 0){
+							Color c = c0*alpha + c1*beta + c2*gamma;
+
+							image[x][y] = c.cround();
+						}
+					}
+				}
+				
+				
+			}
+			
         
         
         }
 
-
-
-        
-
-
-
-    
     }
 
 
@@ -223,18 +252,6 @@ void Scene::forwardRenderingPipeline(Camera *camera)
     
     
     }
-    //step2: Aplly Viewing transformations i.e projection 
-                    //(make it another funciton)
-    //multiply two transformations for each object 
-
-    //step3: 
-    //for all triangles in meshes
-    //   if not backface
-    //      project into image plane
-    //      clip
-    //      draw
-    //   else 
-    //      skip that triangle 
 
 }
 

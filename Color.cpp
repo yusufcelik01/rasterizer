@@ -56,6 +56,15 @@ Color Color::operator+=(Color c)
 
     return *this;
 }
+Color Color::operator+(Color c)
+{
+    Color temp;
+    temp.r = this->r + c.r;
+    temp.g = this->g + c.g;
+    temp.b = this->b + c.b;
+
+    return temp;
+}
 
 Color Color::cround()
 {
@@ -63,5 +72,14 @@ Color Color::cround()
     temp.r = round(this->r);
     temp.g = round(this->g);
     temp.b = round(this->b);
+    return temp;
+}
+
+Color Color::operator*(double x){
+    Color temp;
+    temp.r = this->r*x;
+    temp.g = this->g*x;
+    temp.b = this->b*x;
+
     return temp;
 }

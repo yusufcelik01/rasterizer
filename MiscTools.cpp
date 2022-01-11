@@ -99,21 +99,21 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
             {                                        
                 x0 = round(line.p1.x);           
                 y0 = round(line.p1.y);           
-                color0 = *colors[line.p1.colorId-1];//TODO color indexing
+                color0 = *colors[line.p1.colorId-1];
 
                 x1 = round(line.p2.x);                           
                 y1 = round(line.p2.y);                           
-                color1 = *colors[line.p2.colorId-1];//TODO color indexing
+                color1 = *colors[line.p2.colorId-1];
             }                                                   
             else                                            
             {                                               
                 x0 = round(line.p2.x);
                 y0 = round(line.p2.y);
-                color0 = *colors[line.p2.colorId-1];//TODO color indexing
+                color0 = *colors[line.p2.colorId-1];
 
                 x1 = round(line.p1.x);
                 y1 = round(line.p1.y);
-                color1 = *colors[line.p1.colorId-1];//TODO color indexing
+                color1 = *colors[line.p1.colorId-1];
             }
 
             int y = y0;
@@ -190,21 +190,21 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
             {
                 x0 = round(line.p1.x);
                 y0 = round(line.p1.y);           
-                color0 = *colors[line.p1.colorId-1];//TODO color indexing
+                color0 = *colors[line.p1.colorId-1];
 
                 x1 = round(line.p2.x);                           
                 y1 = round(line.p2.y);                           
-                color1 = *colors[line.p2.colorId-1];//TODO color indexing
+                color1 = *colors[line.p2.colorId-1];
             }
             else
             {
                 x0 = round(line.p2.x);
                 y0 = round(line.p2.y);
-                color0 = *colors[line.p2.colorId-1];//TODO color indexing
+                color0 = *colors[line.p2.colorId-1];
 
                 x1 = round(line.p1.x);
                 y1 = round(line.p1.y);
-                color1 = *colors[line.p1.colorId-1];//TODO color indexing
+                color1 = *colors[line.p1.colorId-1];
             }
 
             int x = x0;
@@ -238,21 +238,21 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
             {
                 x0 = round(line.p1.x);
                 y0 = round(line.p1.y);           
-                color0 = *colors[line.p1.colorId-1];//TODO color indexing
+                color0 = *colors[line.p1.colorId-1];
 
                 x1 = round(line.p2.x);                           
                 y1 = round(line.p2.y);                           
-                color1 = *colors[line.p2.colorId-1];//TODO color indexing
+                color1 = *colors[line.p2.colorId-1];
             }
             else
             {
                 x0 = round(line.p2.x);
                 y0 = round(line.p2.y);
-                color0 = *colors[line.p2.colorId-1];//TODO color indexing
+                color0 = *colors[line.p2.colorId-1];
 
                 x1 = round(line.p1.x);
                 y1 = round(line.p1.y);
-                color1 = *colors[line.p1.colorId-1];//TODO color indexing
+                color1 = *colors[line.p1.colorId-1];
             }
 
             
@@ -281,6 +281,16 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
     }
 
 
+}
 
+LineEquation::LineEquation(int x0, int x1, int y0, int y1)
+{
+    this->x0 = x0;
+    this->y0 = y0;    
+    this->x1 = x1;
+    this->y1 = y1;    
+}
 
+int LineEquation::getLine(int x,int y){
+    return x*(y0-y1)+y*(x1-x0)+x0*y1-y0*x1;
 }

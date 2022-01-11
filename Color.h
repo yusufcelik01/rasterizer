@@ -15,6 +15,8 @@ public:
     Color operator-(Color c);
     Color operator/(int n);
     Color operator+=(Color c);
+    Color operator+(Color c);
+    Color operator*(double x);
     Color cround();
 };
 
