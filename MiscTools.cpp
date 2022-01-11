@@ -1,5 +1,6 @@
 #include "MiscTools.h"
 #include "Helpers.h"
+#include <cmath>
 
 using namespace std;
 
@@ -78,3 +79,56 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
 
 }
 
+
+//draw the line on the image 
+void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Color* >& colors)
+{
+    double slope;
+    //TODO this function assumes color id's start from 0
+    slope = (line.p1.y - line.p2.y)/(line.p1.x - line.p2.x);
+    if(0 < slope && slope <= 1)
+    {
+        int x0, x1, y0, y1;
+        Color color0, color1;
+        
+        if(line.p1.x < line.p2.x)             
+        {                                        
+            x0 = round(line.p1.x);           
+            y0 = round(line.p1.y);           
+            color0 = *colors[line.p1.colorId-1];//TODO color indexing
+
+            x1 = round(line.p2.x);                           
+            y1 = round(line.p2.y);                           
+            color1 = *colors[line.p2.colorId-1];//TODO color indexing
+        }                                                   
+        else                                            
+        {                                               
+            x0 = round(line.p2.x);
+            y0 = round(line.p2.y);
+            color0 = *colors[line.p2.colorId-1];//TODO color indexing
+
+            x1 = round(line.p1.x);
+            y1 = round(line.p1.y);
+            color1 = *colors[line.p1.colorId-1];//TODO color indexing
+        }
+
+        Color black(0, 0, 0);
+        int y = y0;
+        int d = 2*(y0 - y1) + (x1 - x0);
+        for(int x = x0; x <= x1; x++)
+        {
+            image[x][y] = black;//draw the point
+            if(d < 0){
+                y++;
+                d += 2*((y0-y1)+(x1-x0));
+            }
+            else{
+                d += 2*(y0-y1);
+            }
+        }
+    }
+
+
+
+
+}

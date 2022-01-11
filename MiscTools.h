@@ -11,5 +11,6 @@
 Matrix4 computeModellingTransformations(const Scene& scene, Mesh& mesh);
 void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTriangles, bool cullingEnabled);
 
+void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Color* >& colors);
 
 #endif

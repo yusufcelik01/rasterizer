@@ -76,8 +76,8 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 
             
         }//CVV 
-        Vec4 v =processedVertices[7]; 
-        cout << v.x << " " << v.y << ' ' << v.z << " " << v.t << endl; 
+        //Vec4 v =processedVertices[7]; 
+        //cout << v.x << " " << v.y << ' ' << v.z << " " << v.t << endl; 
 
         //**************** CLIPPING ******************
         //
@@ -167,9 +167,12 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 
             for(Line line: lines)
             {
+                /*
                 Color color(0, 0, 0);
                 this->image[round(line.p1.x)][round(line.p1.y)] = color;
                 this->image[round(line.p2.x)][round(line.p2.y)] = color;
+                */
+                drawLine(line, this->image, this->colorsOfVertices);
             }
         
         
