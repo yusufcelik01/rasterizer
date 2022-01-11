@@ -98,7 +98,6 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                 // now ids are sorted
 
 
-                //TODO clipping should be done in these if blocks
                 if(!isLineAdded[make_pair(vId1, vId2)] )
                 {//if that line is not present add it
                     Vec4 p1,p2;
@@ -131,9 +130,13 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                     lines.push_back(Line(p1, p3));
                     isLineAdded.try_emplace({vId1, vId3});
                 }
-
             
             }
+			// TODO start culling
+			// const int l,r,b,t;
+			// for(Line& line : lines){
+
+			// }
 
             //******* prespective division & viewport transformation ****
             Matrix4 mViewport = camera->computeViewportTransformation();

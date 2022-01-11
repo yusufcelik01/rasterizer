@@ -68,3 +68,23 @@ ostream& operator<<(ostream& os, const Vec4& v) {
 
     return os;
 }
+
+Vec4 Vec4::operator-(const Vec4 p1){
+    Vec4 temp;
+    temp.x = this->x-p1.x;
+    temp.y = this->y-p1.y;
+    temp.z = this->z-p1.z;
+    temp.t = this->t;
+    temp.colorId = this->colorId;
+    return temp;
+}
+
+Vec4 Vec4::operator+(const Vec4 p1){
+    Vec4 temp;
+    temp.x = this->x+p1.x;
+    temp.y = this->y+p1.y;
+    temp.z = this->z+p1.z;
+    temp.t = this->t;
+    temp.colorId = this->colorId;
+    return temp;
+}

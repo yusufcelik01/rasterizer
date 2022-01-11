@@ -19,6 +19,9 @@ public:
     double getElementAt(int index);
 
     friend std::ostream& operator<<(std::ostream& os, const Vec4& v);
+
+    Vec4 operator-(const Vec4 p1);
+    Vec4 operator+(const Vec4 p1);
 };
 
 #endif

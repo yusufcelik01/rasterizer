@@ -57,7 +57,7 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
 
             normal = crossProductVec3(v2, v1);
 
-            if( dotProductVec3(normal, cam.gaze) < 0)//if facing front
+            if( dotProductVec3(normal, cam.gaze)+100000000*EPSILON < 0)//if facing front
             {
                 frontFacingTriangles.push_back(i);
             }
