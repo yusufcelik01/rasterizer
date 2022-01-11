@@ -16,8 +16,8 @@ rasterizer: $(RASTERIZER_OBJECTS)
 hw-zip:
 	zip e2457703_e2110252_rasterizer.zip *.cpp *.h
 
-#png:
-#	for foo in *.ppm; do convert "$$foo" "$${foo%.ppm}.png"; done
+png:
+	for foo in *.ppm; do convert "$$foo" "$${foo%.ppm}.png"; done
 
 
 .PHONY: clean

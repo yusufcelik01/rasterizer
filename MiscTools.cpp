@@ -84,48 +84,101 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
 void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Color* >& colors)
 {
     double slope;
-    //TODO this function assumes color id's start from 0
+    int x0, x1, y0, y1;
+    Color color0, color1;
+    Color color(0, 0, 0);
+
+
     slope = (line.p1.y - line.p2.y)/(line.p1.x - line.p2.x);
-    if(0 < slope && slope <= 1)
+    if(0 < slope)
     {
-        int x0, x1, y0, y1;
-        Color color0, color1;
-        
-        if(line.p1.x < line.p2.x)             
-        {                                        
-            x0 = round(line.p1.x);           
-            y0 = round(line.p1.y);           
-            color0 = *colors[line.p1.colorId-1];//TODO color indexing
-
-            x1 = round(line.p2.x);                           
-            y1 = round(line.p2.y);                           
-            color1 = *colors[line.p2.colorId-1];//TODO color indexing
-        }                                                   
-        else                                            
-        {                                               
-            x0 = round(line.p2.x);
-            y0 = round(line.p2.y);
-            color0 = *colors[line.p2.colorId-1];//TODO color indexing
-
-            x1 = round(line.p1.x);
-            y1 = round(line.p1.y);
-            color1 = *colors[line.p1.colorId-1];//TODO color indexing
-        }
-
-        Color black(0, 0, 0);
-        int y = y0;
-        int d = 2*(y0 - y1) + (x1 - x0);
-        for(int x = x0; x <= x1; x++)
+        if(slope <=1)// slope in between (0,1]
         {
-            image[x][y] = black;//draw the point
-            if(d < 0){
-                y++;
-                d += 2*((y0-y1)+(x1-x0));
+
+            if(line.p1.x < line.p2.x)             
+            {                                        
+                x0 = round(line.p1.x);           
+                y0 = round(line.p1.y);           
+                color0 = *colors[line.p1.colorId-1];//TODO color indexing
+
+                x1 = round(line.p2.x);                           
+                y1 = round(line.p2.y);                           
+                color1 = *colors[line.p2.colorId-1];//TODO color indexing
+            }                                                   
+            else                                            
+            {                                               
+                x0 = round(line.p2.x);
+                y0 = round(line.p2.y);
+                color0 = *colors[line.p2.colorId-1];//TODO color indexing
+
+                x1 = round(line.p1.x);
+                y1 = round(line.p1.y);
+                color1 = *colors[line.p1.colorId-1];//TODO color indexing
             }
-            else{
-                d += 2*(y0-y1);
+
+            int y = y0;
+            int d = 2*(y0 - y1) + (x1 - x0);
+            for(int x = x0; x <= x1; x++)
+            {
+                image[x][y] = color;//draw the point
+                if(d < 0){
+                    y++;
+                    d += 2*((y0-y1)+(x1-x0));
+                }
+                else{
+                    d += 2*(y0-y1);
+                }
             }
         }
+        else//slope in between (1,infinity)
+        {
+            if(line.p1.x < line.p2.x)//
+            {
+                x0 = round(line.p1.x);
+                y0 = round(line.p1.y);
+                color0 = *colors[line.p1.colorId-1];
+
+                x1 = round(line.p2.x);
+                y1 = round(line.p2.y);
+                color1 = *colors[line.p2.colorId-1];
+            }
+            else
+            {
+                x0 = round(line.p2.x);
+                y0 = round(line.p2.y);
+                color0 = *colors[line.p2.colorId-1];
+
+                x1 = round(line.p1.x);
+                y1 = round(line.p1.x);
+                color1 = *colors[line.p1.colorId-1];
+            }//now x1 is in the north east of x0
+
+            int x = x0;
+            int d = (y0 - y1) + 2*(x1 - x0);
+            for(int y = y0; y <= y1; y++)
+            {
+                image[x][y] = color;
+                if(d < 0)
+                {
+                    d += 2*(x1 - x0);
+                }
+                else
+                {
+                    x++;
+                    d += 2*((y0 - y1) + (x1 - x0 ));
+                }
+            }
+        
+        }
+    }
+    else//slope <= 0
+    {
+        if(slope <= -1)//slope in between [-1, -infinity]
+        {
+
+        
+        }
+    
     }
 
 
