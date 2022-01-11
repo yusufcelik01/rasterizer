@@ -181,6 +181,18 @@ void Scene::forwardRenderingPipeline(Camera *camera)
         else//if mesh is a solid mesh
         {
             //TODO TODO TODO
+            Matrix4 mViewport = camera->computeViewportTransformation();
+
+            for(pair<const int, Vec4>& vec : processedVertices)
+            {
+                if(camera->projectionType)
+                {
+                    vec.second = perspectiveDivide(vec.second);
+                }
+                vec.second = multiplyMatrixWithVec4(mViewport, vec.second);
+            }
+
+
         
         
         }

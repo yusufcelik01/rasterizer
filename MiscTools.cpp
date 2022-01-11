@@ -118,9 +118,13 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
 
             int y = y0;
             int d = 2*(y0 - y1) + (x1 - x0);
+            Color c = color0;
+            Color dc = (color1 - color0)/(x1 - x0);
             for(int x = x0; x <= x1; x++)
             {
-                image[x][y] = color;//draw the point
+
+                image[x][y] = c.cround();
+
                 if(d < 0){
                     y++;
                     d += 2*((y0-y1)+(x1-x0));
@@ -128,6 +132,7 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
                 else{
                     d += 2*(y0-y1);
                 }
+                c += dc;
             }
         }
         else//slope in between (1,infinity)
@@ -149,15 +154,19 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
                 color0 = *colors[line.p2.colorId-1];
 
                 x1 = round(line.p1.x);
-                y1 = round(line.p1.x);
+                y1 = round(line.p1.y);
                 color1 = *colors[line.p1.colorId-1];
             }//now x1 is in the north east of x0
 
             int x = x0;
             int d = (y0 - y1) + 2*(x1 - x0);
+            Color c = color0;
+            Color dc = (color1 - color0)/(y1 - y0);
             for(int y = y0; y <= y1; y++)
             {
-                image[x][y] = color;
+
+                image[x][y] = c.cround();
+
                 if(d < 0)
                 {
                     d += 2*(x1 - x0);
@@ -167,15 +176,105 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
                     x++;
                     d += 2*((y0 - y1) + (x1 - x0 ));
                 }
+
+                c += dc;
             }
         
         }
     }
     else//slope <= 0
     {
-        if(slope <= -1)//slope in between [-1, -infinity]
+        if( -1 > slope)//slope in between (-1, -infinity]
+        {
+            if(line.p1.y < line.p2.y)
+            {
+                x0 = round(line.p1.x);
+                y0 = round(line.p1.y);           
+                color0 = *colors[line.p1.colorId-1];//TODO color indexing
+
+                x1 = round(line.p2.x);                           
+                y1 = round(line.p2.y);                           
+                color1 = *colors[line.p2.colorId-1];//TODO color indexing
+            }
+            else
+            {
+                x0 = round(line.p2.x);
+                y0 = round(line.p2.y);
+                color0 = *colors[line.p2.colorId-1];//TODO color indexing
+
+                x1 = round(line.p1.x);
+                y1 = round(line.p1.y);
+                color1 = *colors[line.p1.colorId-1];//TODO color indexing
+            }
+
+            int x = x0;
+            int d = -(y0 - y1) + 2*(x1 - x0);
+            Color c = color0;
+            Color dc = (color1 - color0)/(y1 - y0);
+
+            for(int y = y0; y<= y1; y++)
+            {
+                image[x][y] = c.cround();
+
+                if(d < 0){
+                    x--;
+                    d += 2*(-(y0 - y1) + (x1 - x0) );
+                }
+                else
+                {
+                    d += 2*(x1 - x0);
+                }
+
+                c += dc;
+            
+            }
+
+        
+        }
+        else
         {
 
+            if(line.p1.y < line.p2.y)
+            {
+                x0 = round(line.p1.x);
+                y0 = round(line.p1.y);           
+                color0 = *colors[line.p1.colorId-1];//TODO color indexing
+
+                x1 = round(line.p2.x);                           
+                y1 = round(line.p2.y);                           
+                color1 = *colors[line.p2.colorId-1];//TODO color indexing
+            }
+            else
+            {
+                x0 = round(line.p2.x);
+                y0 = round(line.p2.y);
+                color0 = *colors[line.p2.colorId-1];//TODO color indexing
+
+                x1 = round(line.p1.x);
+                y1 = round(line.p1.y);
+                color1 = *colors[line.p1.colorId-1];//TODO color indexing
+            }
+
+            
+            int y = y0;
+            int d = -2*(y0 - y1) + (x1 - x0);
+            Color c = color0;
+            Color dc = (color1 - color0)/(x0-x1);
+        
+            for(int x = x0; x >= x1; x--)
+            {
+                image[x][y] = c.cround();
+
+                if( d < 0){
+                    d += -2 *(y0 - y1);
+                }
+                else{
+                    y++;
+                    d += 2* (-(y0 - y1) + (x1 -x0));
+                }
+                c += dc;
+
+            }
         
         }
     
