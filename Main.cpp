@@ -9,10 +9,12 @@
 
 using namespace std;
 
+
 Scene *scene;
 
 int main(int argc, char *argv[])
 {
+
     if (argc != 2)
     {
         cout << "Please run the rasterizer as:" << endl

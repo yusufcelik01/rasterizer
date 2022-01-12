@@ -4,6 +4,7 @@ input_outputs/**
 *.ppm
 *.png
 *.swp
+*.txt
 *.xml
 rasterizer
 

@@ -51,3 +51,36 @@ ostream& operator<<(ostream& os, const Vec3& v) {
 
     return os;
 }
+
+Vec3 Vec3::operator*(const int& i)
+{
+    Vec3 temp;
+    temp.x = this->x * i;
+    temp.y = this->y * i;
+    temp.z = this->z * i;
+    temp.colorId = this->colorId;
+
+    return temp;
+}
+
+Vec3 Vec3::operator+(const Vec3& v)
+{
+    Vec3 temp;
+    temp.x = this->x + v.x;
+    temp.y = this->y + v.y;
+    temp.z = this->z + v.z;
+    temp.colorId = this->colorId;
+
+    return temp;
+}
+
+Vec3 Vec3::operator-(const Vec3& v)
+{
+    Vec3 temp;
+    temp.x = this->x - v.x;
+    temp.y = this->y - v.y;
+    temp.z = this->z - v.z;
+    temp.colorId = this->colorId;
+
+    return temp;
+}

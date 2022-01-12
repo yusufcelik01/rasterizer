@@ -14,7 +14,7 @@ rasterizer: $(RASTERIZER_OBJECTS)
 
 
 hw-zip:
-	zip e2457703_e2110252_rasterizer.zip *.cpp *.h
+	zip e2457703_e2110252_rasterizer.zip Makefile *.cpp *.h
 
 png:
 	for foo in *.ppm; do convert "$$foo" "$${foo%.ppm}.png"; done
@@ -25,5 +25,11 @@ clean:
 	-rm rasterizer
 	-rm *.o
 	
+Culling_disabled:
+	for foo in culling_disabled_inputs/*xml; do bar="time_$${foo#inputs/}"; echo "./rasterizer $$foo";  ./rasterizer "$$foo" ;  done
 
+Culling_enabled:
+	for foo in culling_enabled_inputs/*xml; do bar="time_$${foo#inputs/}"; echo "./rasterizer $$foo";  ./rasterizer "$$foo" ;  done
 
+Clipping:
+	for foo in clipping_example/*xml; do bar="time_$${foo#inputs/}"; echo "./rasterizer $$foo";  ./rasterizer "$$foo" ;  done

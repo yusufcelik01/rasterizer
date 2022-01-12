@@ -21,6 +21,9 @@
 #include "Line.h"
 #include <map>
 
+
+
+
 using namespace tinyxml2;
 using namespace std;
 
@@ -32,7 +35,7 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 {
     Matrix4  mCam, mPer, Mvp;
     
-
+    //if(camera->cameraId != 5 ){return;}//TODO debug
     for(Mesh* mesh: meshes)
     {
         //************** BACK FACE CULLING************
@@ -63,11 +66,13 @@ void Scene::forwardRenderingPipeline(Camera *camera)
             processedVertices.try_emplace(triangle.vertexIds[0], v1);
             processedVertices.try_emplace(triangle.vertexIds[1], v2);
             processedVertices.try_emplace(triangle.vertexIds[2], v3);
+            //cout << triangle.vertexIds[0] << " " << triangle.vertexIds[1] << " " << triangle.vertexIds[2] << " " <<endl;//TODO debug
 
             
         }//CVV 
-        //Vec4 v =processedVertices[7]; 
+        //Vec4 v =processedVertices[-1]; //TODO debug
         //cout << v.x << " " << v.y << ' ' << v.z << " " << v.t << endl; 
+        //cout << "-1 \n";
 
         //**************** CLIPPING ******************
         //
@@ -185,10 +190,17 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 
 			for (int id : frontFacingTriangles)
 			{
+                
 				Triangle triangle = mesh->triangles[id];
+                if(7093 == triangle.vertexIds[0] || 7090 == triangle.vertexIds[2]) {continue;}//TODO debug
+                if(7093 == triangle.vertexIds[1] || 7090 == triangle.vertexIds[2]) {continue;}//TODO debug
+                if(7093 == triangle.vertexIds[2] || 7090 == triangle.vertexIds[2]) {continue;}//TODO debug
+                //cout << triangle.getThirdVertexId() << endl;//TODO debug
+
 				Vec4 vec0 = processedVertices[triangle.getFirstVertexId()];
 				Vec4 vec1 = processedVertices[triangle.getSecondVertexId()];
-				Vec4 vec2 = processedVertices[triangle.getThirdVertexId()];
+                Vec4 vec2 = processedVertices[triangle.getThirdVertexId()];
+
 
 				int x0,y0,x1,y1,x2,y2;
 				Color c0, c1, c2;
@@ -204,6 +216,18 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 				y2 = vec2.y;
 				c2 = *(this->colorsOfVertices[vec2.colorId-1]);
 
+                //TODO debug line remove
+                //if(x0 < -0 || y0 < -0 || x1 < -0 || y1 < -0 || x2 < -0 || y2 < -0 ){
+                //    cout << "\nTriangle: " << id << endl;
+                //    cout << "p0: " << x0 << " " << y0 <<  endl;
+                //    cout << "p1: " << x1 << " " << y1 <<  endl;
+                //    cout << "p2: " << x2 << " " << y2 <<  endl;
+
+
+                //    continue;
+                //}
+                //TODO debug lines ends
+
 				LineEquation f01(x0,x1,y0,y1);
 				LineEquation f12(x1,x2,y1,y2);
 				LineEquation f20(x2,x0,y2,y0);
@@ -218,6 +242,9 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 				for (int y = ymin; y <= ymax; y++){
 					for (int x = xmin; x <= xmax; x++)
 					{
+                        if(x < 0 || y <0){
+                            continue;
+                        }
 						double alpha = f12.getLine(x,y)*denom12;
 						double beta = f20.getLine(x,y)*denom20;
 						double gamma = f01.getLine(x,y)*denom01;

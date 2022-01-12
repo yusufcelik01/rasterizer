@@ -52,13 +52,22 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
             c2 = makeVec3(mesh.transformedVertices[triangle.vertexIds[1]-1]);
             c3 = makeVec3(mesh.transformedVertices[triangle.vertexIds[2]-1]);
 
+            //int colorId1 = c1.colorId-1;//TODO debug lines
+            //int colorId2 = c2.colorId-1;
+            //int colorId3 = c3.colorId-1;
+
             v1 = subtractVec3(c2, c1);
-            v2 = subtractVec3(c1, c3);
+            v2 = subtractVec3(c3, c2);
 
-            normal = crossProductVec3(v2, v1);
+            normal = crossProductVec3(v1, v2);
 
-            if( dotProductVec3(normal, cam.gaze)+100000000*EPSILON < 0)//if facing front
+            Vec3 vStare = c1 - cam.pos;
+
+            double dotProduct = dotProductVec3(normal, vStare);
+            //cout << dotProduct << endl; //TODO debug
+            if(dotProduct  < 0)//if facing front
             {
+                //cout << "accepted\n";//TODO debug
                 frontFacingTriangles.push_back(i);
             }
 
@@ -90,9 +99,9 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
 
 
     slope = (line.p1.y - line.p2.y)/(line.p1.x - line.p2.x);
-    if(0 < slope)
+    if(0 <= slope)
     {
-        if(slope <=1)// slope in between (0,1]
+        if(slope <1)// slope in between [0,1)
         {
 
             if(line.p1.x < line.p2.x)             
@@ -182,9 +191,9 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
         
         }
     }
-    else//slope <= 0
+    else//slope < 0
     {
-        if( -1 > slope)//slope in between (-1, -infinity]
+        if( -1 >= slope)//slope in between (-1, -infinity]
         {
             if(line.p1.y < line.p2.y)
             {
