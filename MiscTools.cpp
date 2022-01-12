@@ -29,16 +29,12 @@ Matrix4 computeModellingTransformations(const Scene& scene,  Mesh& mesh)
 
                 break;
         } 
-    
     }
-
     return acc;
 }
 
-
 void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTriangles, bool cullingEnabled)
 {
-
     if(cullingEnabled)
     {
         size_t i=0;//triangle index i.e id
@@ -52,10 +48,6 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
             c2 = makeVec3(mesh.transformedVertices[triangle.vertexIds[1]-1]);
             c3 = makeVec3(mesh.transformedVertices[triangle.vertexIds[2]-1]);
 
-            //int colorId1 = c1.colorId-1;//TODO debug lines
-            //int colorId2 = c2.colorId-1;
-            //int colorId3 = c3.colorId-1;
-
             v1 = subtractVec3(c2, c1);
             v2 = subtractVec3(c3, c2);
 
@@ -64,16 +56,13 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
             Vec3 vStare = c1 - cam.pos;
 
             double dotProduct = dotProductVec3(normal, vStare);
-            //cout << dotProduct << endl; //TODO debug
             if(dotProduct  < 0)//if facing front
             {
-                //cout << "accepted\n";//TODO debug
                 frontFacingTriangles.push_back(i);
             }
 
             i++;//increment index
         }
-
     }
     else//culling disabled
     {
@@ -83,11 +72,7 @@ void backFaceCulling(const Camera& cam, Mesh& mesh, vector<int>& frontFacingTria
             frontFacingTriangles.push_back(i);
         }
     }
-
-
-
 }
-
 
 //draw the line on the image 
 void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Color* >& colors)
@@ -97,13 +82,11 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
     Color color0, color1;
     Color color(0, 0, 0);
 
-
     slope = (line.p1.y - line.p2.y)/(line.p1.x - line.p2.x);
     if(0 <= slope)
     {
         if(slope <1)// slope in between [0,1)
         {
-
             if(line.p1.x < line.p2.x)             
             {                                        
                 x0 = round(line.p1.x);           
@@ -131,7 +114,6 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
             Color dc = (color1 - color0)/(x1 - x0);
             for(int x = x0; x <= x1; x++)
             {
-
                 image[x][y] = c.cround();
 
                 if(d < 0){
@@ -173,7 +155,6 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
             Color dc = (color1 - color0)/(y1 - y0);
             for(int y = y0; y <= y1; y++)
             {
-
                 image[x][y] = c.cround();
 
                 if(d < 0)
@@ -185,10 +166,8 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
                     x++;
                     d += 2*((y0 - y1) + (x1 - x0 ));
                 }
-
                 c += dc;
             }
-        
         }
     }
     else//slope < 0
@@ -233,12 +212,8 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
                 {
                     d += 2*(x1 - x0);
                 }
-
                 c += dc;
-            
             }
-
-        
         }
         else
         {
@@ -282,14 +257,9 @@ void drawLine(const Line& line, vector< vector<Color> >& image, const vector< Co
                     d += 2* (-(y0 - y1) + (x1 -x0));
                 }
                 c += dc;
-
             }
-        
         }
-    
     }
-
-
 }
 
 LineEquation::LineEquation(int x0, int x1, int y0, int y1)

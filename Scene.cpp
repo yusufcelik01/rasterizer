@@ -16,7 +16,6 @@
 #include "Vec3.h"
 #include "tinyxml2.h"
 #include "Helpers.h"
-//#include <unordered_map>
 #include "MiscTools.h"
 #include "Line.h"
 #include <map>
@@ -67,8 +66,6 @@ void Scene::forwardRenderingPipeline(Camera *camera)
             processedVertices.try_emplace(triangle.vertexIds[1], v2);
             processedVertices.try_emplace(triangle.vertexIds[2], v3);
             //cout << triangle.vertexIds[0] << " " << triangle.vertexIds[1] << " " << triangle.vertexIds[2] << " " <<endl;//TODO debug
-
-            
         }//CVV 
         //Vec4 v =processedVertices[-1]; //TODO debug
         //cout << v.x << " " << v.y << ' ' << v.z << " " << v.t << endl; 
@@ -135,12 +132,10 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                     lines.push_back(Line(p1, p3));
                     isLineAdded.try_emplace({vId1, vId3});
                 }
-            
             }
 			// TODO start culling
 			// const int l,r,b,t;
 			// for(Line& line : lines){
-
 			// }
 
             //******* prespective division & viewport transformation ****
@@ -159,8 +154,6 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                 line.p2 = multiplyMatrixWithVec4(mViewport, point2);
             }
 
-
-
             for(Line line: lines)
             {
                 /*
@@ -170,13 +163,9 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                 */
                 drawLine(line, this->image, this->colorsOfVertices);
             }
-        
-        
-        
         }
         else//if mesh is a solid mesh
         {
-            
             Matrix4 mViewport = camera->computeViewportTransformation();
 
             for(pair<const int, Vec4>& vec : processedVertices)
@@ -192,15 +181,10 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 			{
                 
 				Triangle triangle = mesh->triangles[id];
-                if(7093 == triangle.vertexIds[0] || 7090 == triangle.vertexIds[2]) {continue;}//TODO debug
-                if(7093 == triangle.vertexIds[1] || 7090 == triangle.vertexIds[2]) {continue;}//TODO debug
-                if(7093 == triangle.vertexIds[2] || 7090 == triangle.vertexIds[2]) {continue;}//TODO debug
-                //cout << triangle.getThirdVertexId() << endl;//TODO debug
 
 				Vec4 vec0 = processedVertices[triangle.getFirstVertexId()];
 				Vec4 vec1 = processedVertices[triangle.getSecondVertexId()];
                 Vec4 vec2 = processedVertices[triangle.getThirdVertexId()];
-
 
 				int x0,y0,x1,y1,x2,y2;
 				Color c0, c1, c2;
@@ -215,18 +199,6 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 				x2 = vec2.x;
 				y2 = vec2.y;
 				c2 = *(this->colorsOfVertices[vec2.colorId-1]);
-
-                //TODO debug line remove
-                //if(x0 < -0 || y0 < -0 || x1 < -0 || y1 < -0 || x2 < -0 || y2 < -0 ){
-                //    cout << "\nTriangle: " << id << endl;
-                //    cout << "p0: " << x0 << " " << y0 <<  endl;
-                //    cout << "p1: " << x1 << " " << y1 <<  endl;
-                //    cout << "p2: " << x2 << " " << y2 <<  endl;
-
-
-                //    continue;
-                //}
-                //TODO debug lines ends
 
 				LineEquation f01(x0,x1,y0,y1);
 				LineEquation f12(x1,x2,y1,y2);
@@ -255,21 +227,10 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 						}
 					}
 				}
-				
-				
 			}
-			
-        
-        
         }
-
     }
 
-
-    //*******8
-
-
-    
     size_t numberOfMeshes = this->meshes.size();
     vector<unordered_map<int, Vec3>> meshVertices;//move to mesh class
     
@@ -277,12 +238,8 @@ void Scene::forwardRenderingPipeline(Camera *camera)
     {
         //mesh = this->meshes[i];//processing i'th mesh
         meshVertices.push_back({});//allocate new map
-        
-
-    
     
     }
-
 }
 
 /*
@@ -615,5 +572,3 @@ void Scene::convertPPMToPNG(string ppmFileName, int osType)
 	{
 	}
 }
-
-
