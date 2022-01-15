@@ -37,6 +37,7 @@ void Scene::forwardRenderingPipeline(Camera *camera)
     //if(camera->cameraId != 5 ){return;}//TODO debug
     for(Mesh* mesh: meshes)
     {
+        //cout << " NEW MESH \n\n";
         //************** BACK FACE CULLING************
         vector<int> frontFacingTriangles = {};
         unordered_map<int, Vec4> processedVertices = {};
@@ -53,9 +54,9 @@ void Scene::forwardRenderingPipeline(Camera *camera)
             //
             Vec4 v1,v2,v3; 
             Triangle triangle = mesh->triangles[triangleId];
-            v1 = mesh->transformedVertices[triangle.vertexIds[0]-1];
-            v2 = mesh->transformedVertices[triangle.vertexIds[1]-1];
-            v3 = mesh->transformedVertices[triangle.vertexIds[2]-1];
+            v1 = mesh->transformedVertices.at(triangle.vertexIds[0]-1);
+            v2 = mesh->transformedVertices.at(triangle.vertexIds[1]-1);
+            v3 = mesh->transformedVertices.at(triangle.vertexIds[2]-1);
 
             v1 = multiplyMatrixWithVec4(MperMcam, v1);
             v2 = multiplyMatrixWithVec4(MperMcam, v2);
@@ -65,6 +66,7 @@ void Scene::forwardRenderingPipeline(Camera *camera)
             processedVertices.try_emplace(triangle.vertexIds[0], v1);
             processedVertices.try_emplace(triangle.vertexIds[1], v2);
             processedVertices.try_emplace(triangle.vertexIds[2], v3);
+           
             //cout << triangle.vertexIds[0] << " " << triangle.vertexIds[1] << " " << triangle.vertexIds[2] << " " <<endl;//TODO debug
         }//CVV 
         //Vec4 v =processedVertices[-1]; //TODO debug
@@ -73,6 +75,12 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 
         //**************** CLIPPING ******************
         //
+        //try{
+        //    cout << "line 78 " <<processedVertices.at(7093) << endl;//TODO
+        //}
+        //catch(out_of_range ex){
+        //    cout << "index out range 7093\n";
+        //}
 
         if(!mesh->type)//if mesh is a wireframe mesh
         {
@@ -100,37 +108,46 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                 // now ids are sorted
 
 
-                if(!isLineAdded[make_pair(vId1, vId2)] )
+                if(!isLineAdded.count(make_pair(vId1, vId2)) )
                 {//if that line is not present add it
                     Vec4 p1,p2;
 
-                    p1 = processedVertices[vId1];
-                    p2 = processedVertices[vId2];
+                    //p1 = processedVertices[vId1];
+                    //p2 = processedVertices[vId2];
+
+                    p1 = processedVertices.at(vId1);
+                    p2 = processedVertices.at(vId2);
 
                     lines.push_back(Line(p1, p2));
-                    isLineAdded.try_emplace({vId1, vId2});
+                    isLineAdded.try_emplace({vId1, vId2}, true);
                     
                 }
-                if(!isLineAdded[make_pair(vId2, vId3)] )
+                if(!isLineAdded.count(make_pair(vId2, vId3)) )
                 {
                     Vec4 p2, p3;
 
-                    p2 = processedVertices[vId2];
-                    p3 = processedVertices[vId3];
+                    //p2 = processedVertices[vId2];
+                    //p3 = processedVertices[vId3];
+
+                    p2 = processedVertices.at(vId2);
+                    p3 = processedVertices.at(vId3);
 
                     lines.push_back(Line(p2, p3));
-                    isLineAdded.try_emplace({vId2, vId3});
+                    isLineAdded.try_emplace({vId2, vId3},true);
                 
                 }
-                if(!isLineAdded[make_pair(vId1, vId3)] )
+                if(!isLineAdded.count(make_pair(vId1, vId3)) )
                 {
                     Vec4 p1, p3;
                 
-                    p1 = processedVertices[vId1];
-                    p3 = processedVertices[vId3];
+                    //p1 = processedVertices[vId1];
+                    //p3 = processedVertices[vId3];
+
+                    p1 = processedVertices.at(vId1);
+                    p3 = processedVertices.at(vId3);
 
                     lines.push_back(Line(p1, p3));
-                    isLineAdded.try_emplace({vId1, vId3});
+                    isLineAdded.try_emplace({vId1, vId3}, true);
                 }
             }
 			// TODO start culling
@@ -177,14 +194,35 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                 vec.second = multiplyMatrixWithVec4(mViewport, vec.second);
             }
 
+            //for(pair<const int, Vec4>& vec : processedVertices)//TODO debug
+            //{
+            //    cout << vec.second << endl;
+            //     
+            //}
+
+            //try{
+            //    cout << "line 203 " <<processedVertices.at(7093) << endl;//TODO
+            //    cout << processedVertices.at(7093) << endl;//TODO
+            //}
+            //catch(out_of_range ex){
+            //    cout << "index out range 7093\n";
+            //}
 			for (int id : frontFacingTriangles)
 			{
                 
 				Triangle triangle = mesh->triangles[id];
+                Vec4 vec0;
+                Vec4 vec1;
+                Vec4 vec2;
 
-				Vec4 vec0 = processedVertices[triangle.getFirstVertexId()];
-				Vec4 vec1 = processedVertices[triangle.getSecondVertexId()];
-                Vec4 vec2 = processedVertices[triangle.getThirdVertexId()];
+                try{
+                    vec0 = processedVertices.at(triangle.vertexIds[0]);
+                    vec1 = processedVertices.at(triangle.vertexIds[1]);
+                    vec2 = processedVertices.at(triangle.vertexIds[2]);
+                }
+                catch(out_of_range ex){
+                    continue;
+                }
 
 				int x0,y0,x1,y1,x2,y2;
 				Color c0, c1, c2;
@@ -214,7 +252,8 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 				for (int y = ymin; y <= ymax; y++){
 					for (int x = xmin; x <= xmax; x++)
 					{
-                        if(x < 0 || y <0){
+                        if(x < 0 || y <0 ||
+                            x >= camera->horRes || y >= camera->verRes){
                             continue;
                         }
 						double alpha = f12.getLine(x,y)*denom12;
@@ -224,22 +263,28 @@ void Scene::forwardRenderingPipeline(Camera *camera)
 							Color c = c0*alpha + c1*beta + c2*gamma;
 
 							image[x][y] = c.cround();
+							//image[x][y].r = round(c.r);
+							//image[x][y].g = round(c.g);
+							//image[x][y].b = round(c.b);
+
 						}
 					}
 				}
 			}
         }
+        //cout << image.size() << endl;
+        //cout << image[0].size() << endl;
     }
 
-    size_t numberOfMeshes = this->meshes.size();
-    vector<unordered_map<int, Vec3>> meshVertices;//move to mesh class
-    
-    for(size_t i=0; i<numberOfMeshes; i++)//calculate new meshes
-    {
-        //mesh = this->meshes[i];//processing i'th mesh
-        meshVertices.push_back({});//allocate new map
-    
-    }
+    //size_t numberOfMeshes = this->meshes.size();
+    //vector<unordered_map<int, Vec3>> meshVertices;//move to mesh class
+    //
+    //for(size_t i=0; i<numberOfMeshes; i++)//calculate new meshes
+    //{
+    //    //mesh = this->meshes[i];//processing i'th mesh
+    //    meshVertices.push_back({});//allocate new map
+    //
+    //}
 }
 
 /*
