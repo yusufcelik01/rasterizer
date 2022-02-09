@@ -11,11 +11,6 @@ rasterizer: $(RASTERIZER_OBJECTS)
 %.o: %.cpp %.h
 
 
-
-
-hw-zip:
-	zip e2457703_e2110252_rasterizer.zip Makefile *.cpp *.h
-
 png:
 	for foo in *.ppm; do convert "$$foo" "$${foo%.ppm}.png"; done
 
