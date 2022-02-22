@@ -220,7 +220,7 @@ void Scene::forwardRenderingPipeline(Camera *camera)
                     vec1 = processedVertices.at(triangle.vertexIds[1]);
                     vec2 = processedVertices.at(triangle.vertexIds[2]);
                 }
-                catch(out_of_range ex){
+                catch(out_of_range& ex){
                     continue;
                 }
 
